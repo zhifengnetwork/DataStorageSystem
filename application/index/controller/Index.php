@@ -39,12 +39,6 @@ class Index extends Base
         $CardList = new CardList();
         $count['card'] = $CardList->where(['admin_id'=>$admin_id])->count();
 
-        $CardList = new CardList();
-        $count['card'] = $CardList->where(['admin_id'=>$admin_id])->count();
-
-        $ActivityList = new ActivityList();
-        $count['activity'] = $ActivityList->where(['admin_id'=>$admin_id])->count();
-
         $ActivityList = new ActivityList();
         $count['activity'] = $ActivityList->where(['admin_id'=>$admin_id])->count();
 
