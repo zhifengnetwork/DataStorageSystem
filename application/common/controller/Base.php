@@ -16,7 +16,7 @@ class Base extends Controller
             $this->redirect('user/login/index');
         }
     }
-       
+
 
     /**
      * 空
