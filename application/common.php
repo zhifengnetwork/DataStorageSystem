@@ -12,6 +12,15 @@ function admin_log($admin_id){
 
 }
 
+function pre($data){
+    echo '<pre>';
+    print_r($data);
+}
+
+function pred($data){
+    echo '<pre>';
+    print_r($data);die;
+}
 
 function get_client_ip($type = 0) {
     $type       =  $type ? 1 : 0;
