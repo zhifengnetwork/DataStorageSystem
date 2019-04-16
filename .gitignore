@@ -1,0 +1,7 @@
+.idea
+.vscode
+composer.lock
+*.log
+runtime
+public/uploads
+application/database.php
