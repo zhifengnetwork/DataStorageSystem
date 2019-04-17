@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="__LIB__/html5shiv.js"></script>
+<script type="text/javascript" src="__LIB__/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="__LIB__/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="__LIB__/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>类别管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 类别管理 <span class="c-gray en">&gt;</span> 类别列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+  <!-- <div class="text-c"> 日期范围：
+    <input type="text" onfocus="WdatePicker({maxDate:'#F{ $dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
+    -
+    <input type="text" onfocus="WdatePicker({minDate:'#F{ $dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;">
+    <input type="text" class="input-text" style="width:250px" placeholder="输入客户名称、电话、邮箱" id="" name=""><button type="submit" class="btn btn-success" id="" name=""><i class="icon-search"></i> 搜客户</button>
+
+  </div> -->
+  <div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+    <!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="icon-trash"></i> 批量删除</a> -->
+    <a href="javascript:;" onclick="add('添加类别','{:url(\'Category/index/add\')}')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加类别</a></span>
+  </div>
+  <table class="table table-border table-bordered table-hover table-bg table-sort">
+    <thead>
+      <tr class="text-c">
+        <th width="25"><input type="checkbox" name="" value=""></th>
+        <th width="80">ID</th>
+        <th>类别名称</th>
+        <th>类别图片</th>
+        <th>是否显示</th>
+        <th>描述</th>
+        <th>排序</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <div id="pageNav" class="pageNav"></div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__LIB__/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__LIB__/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__LIB__/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__LIB__/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__LIB__/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+
+$('.table-sort').dataTable({
+	"lengthMenu": [10,25,50,100],    // 具体的数量
+	"Filter": false,//过滤功能
+	"Paginate": false,//翻页信息
+	"Info": false,//数量信息
+  "searching":true,  // 是否开启搜索功能
+	"order":[ [1,'desc'] ], // 设置默认排序的表格列[参数1是表格列的下标，从0开始]
+  "ordering": true,  // 是否开启排序功能
+	"StateSave": true,//状态保存
+	
+  "columnDefs":[{
+     "targets": [0,2,3,4,5,7],  // 模板栏目列的下标[下标从0开始的,-1表示倒数第一个]
+     "orderable": false   // 这里固定是false
+  }],
+  "serverSide": true,
+  "ajax": {               // 使用ajax到后台服务获取数据
+      // 请求数据的后台地址，这个地址必须返回的是json格式[注意，修改对应的地址]
+      "url": "{:url('category/index/index')}", 
+      "type": "POST",     // ajax的请求方法
+      
+  },
+  "columns": [
+
+      {'data':'a',"defaultContent":""},
+      {'data':'cat_id'},
+      {'data':'cat_name'},
+      {'data':'b',"defaultContent":""},
+      {'data':'is_show'},
+      {'data':'desc'},
+      {'data':'sort'},
+      {'data':'c',"defaultContent":""},
+
+  ],
+  "createdRow": function(row,data,dataIndex){
+    
+    $(row).addClass('text-c');
+    $(row).children().first().html('<input type="checkbox" name="cat_id[]" value="'+data.cat_id+'" />');
+
+   	var cat_img = "<img width='200' src='__IMAGES__/";
+   		cat_img+=data.img;
+   		cat_img+="' />";
+   	$(row).children().eq(3).html(cat_img);
+
+    var is_show = '';
+    if(data.is_show){
+      is_show = '<span onclick="is_show(this,'+data.cat_id+','+data.is_show+')" class="label label-success radius">显示</span>';
+    }else{
+      is_show = '<span onclick="is_show(this,'+data.cat_id+','+data.is_show+')" class="label label-defaunt radius">不显示</span>';
+    }
+    $(row).children().eq(4).html( is_show );
+
+   	function time(sj)
+    {
+          var    now     = new Date(sj*1000);
+          var    year     =now.getFullYear();     
+          var   month  =now.getMonth()+1;     
+          var   date      =now.getDate();     
+          var   hour     =now.getHours();     
+          var   minute =now.getMinutes();     
+          var   second =now.getSeconds();  
+       
+          return   year+"-"+month+"-"+date+"   "+hour+":"+minute+":"+second;     
+    }
+    // $(row).children().eq(7).html( time(data.add_time) );
+
+    var html = "<a title=\"{:lang(\'资料\')}\" href=\"{:url('Document/index/index','',false)}/cat_id/"+data.cat_id+"\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe627;</i></a> ";
+    html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('category/index/edit','',false)}/cat_id/"+data.cat_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.cat_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    $(row).children().last().html(html);
+  }
+});
+
+/*增加*/
+function add(title,url,w=1120,h=700){
+  layer_show(title,url,w,h);
+}
+function edit(title,url,w=1120,h=700){
+  layer_show(title,url,w,h);
+}
+function del(obj,id){
+  layer.confirm('{:lang(\'确认要删除吗\')}?',function(index){
+    //此处请求后台程序，下方是成功后的前台处理……
+    $.post("{:URL('category/index/del')}" ,{'id':id} ,function(data){
+      if( data.status==1 ){
+        $(obj).parents("tr").remove();
+        layer.msg('{:lang(\'已删除\')}!',{icon:1,time:1000});
+      }else{
+        layer.msg('{:lang(\'删除失败\')}!',{icon: 5,time:1000});
+      }
+    },'json');
+
+  });
+}
+
+function is_show(obj,id,is_show){
+  if(is_show){
+    var d = 0;
+    var show = '<span onclick="is_show(this,'+id+','+d+')" class="label label-defaunt radius">不显示</span>';
+  }else{
+    var d = 1;
+    var show = '<span onclick="is_show(this,'+id+','+d+')" class="label label-success radius">显示</span>';
+  }
+  //此处请求后台程序，下方是成功后的前台处理……
+  
+  $.post("{:URL('category/index/is_show')}" ,{'cat_id':id,'is_show':d} ,function(msg){
+    if( msg.status ){
+      $(obj).parent().html( show );
+      layer.msg(msg.info,{icon: 1,time:1000});
+    }else{
+      
+      layer.msg(msg.info,{icon: 5,time:1000});
+    }
+  },'json');
+}
+
+//图片点击放大
+$(function(){
+    $(document).on('click',".text-c",function(e){
+      if( $(e.target).prop("tagName") == 'IMG' ){
+        var _img=$(e.target).attr("src");
+        $("body").append("<div class='mask_img'><img src=''></div>");
+        $(".mask_img img").attr("src",_img)
+        var _width=$(".mask_img img").width()
+        $(".mask_img img") .css("marginLeft",-_width/2)               
+        console.log(-_width/2)
+      }
+    })
+    $("body").delegate('.mask_img','click',function(){
+          $(this).remove();
+       })
+  })
+</script>
+<style type="text/css">
+  .mask_img{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        background-color: rgba(0,0,0,0.5);
+        width: 100%;
+        height: 100%
+    }
+    .mask_img img{position: relative;top: 30%;left: 50%;transform:scale(1.5,1.5)}
+</style>
+</body>
+</html>

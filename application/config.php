@@ -15,6 +15,10 @@ return [
     // | 模块设置
     // +----------------------------------------------------------------------
 
+    
+    // 应用调试模式
+    'app_debug'              => true,
+
     // 默认模块名
     'default_module'         => 'index',
     // 禁止访问模块
@@ -38,6 +42,7 @@ return [
         '__LIB__'    =>  '/public/lib',
         '__ROOT__'    =>  DS,
         '__STATIC__'    =>  '/public/static',
-        '__IMAGES__'    =>   '/public/uploads',
+        '__IMAGES__'    =>   '/public/uploads/images',
+        '__ADMIN__'    =>   '/public/static/admin',
     ],
 ];

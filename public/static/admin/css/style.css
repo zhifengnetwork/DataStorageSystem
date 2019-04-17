@@ -1,0 +1,22 @@
+@charset "utf-8";
+/* 你自己的样式 */
+.Hui-aside{background-color: #2F4050}
+.menu_dropdown  dl{background-color: #2F4050;}
+.Hui-aside .menu_dropdown dt{color: #a7b1c2;border:none;}
+.Hui-aside .menu_dropdown dt:hover{color: #fff}
+.Hui-aside .menu_dropdown dt:hover{color: #fff}
+.Hui-aside .menu_dropdown li a{color: #a7b1c2 }
+.Hui-aside .menu_dropdown li a:hover{background-color: #2F4050;color: #fff}
+.Hui-logo{color: #fff}
+.Hui-logo:hover{color: #fff}
+.Hui-userbar > li > a{color: #fff}
+.table-bg thead th{background-color: #F5F5F6;}
+
+
+
+
+
+
+
+
+
