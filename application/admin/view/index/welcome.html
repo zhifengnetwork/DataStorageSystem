@@ -1,0 +1,76 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="__LIB__/html5shiv.js"></script>
+<script type="text/javascript" src="__LIB__/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="__LIB__/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="__LIB__/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>我的桌面</title>
+</head>
+<body>
+<div class="page-container">
+	<p class="f-20 text-success">欢迎使用 CRM（客户关系管理）后台！ <span class="f-14">v3.1</span></p>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th colspan="7" scope="col">信息统计</th>
+			</tr>
+			<tr class="text-c">
+				<th>统计</th>
+				<th>图片库</th>
+				<th>优惠券</th>
+				<th>活动数</th>
+				<th>客户数</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="text-c">
+				<td>总数</td>
+				<td>{$count['pic']}</td>
+				<td>{$count['card']}</td>
+				<td>{$count['activity']}</td>
+				<td>{$count['member']}</td>
+				
+			</tr>
+			
+		</tbody>
+	</table>
+	<table class="table table-border table-bordered table-bg mt-20">
+		<thead>
+			<tr>
+				<th colspan="2" scope="col">登录信息</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th width="30%">登录名</th>
+				<td><span id="lbServerName">{$Think.session.admin_name}</span></td>
+			</tr>
+			
+		</tbody>
+	</table>
+</div>
+
+
+
+
+<script type="text/javascript" src="__LIB__/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/h-ui/js/H-ui.min.js"></script> 
+
+</body>
+</html>

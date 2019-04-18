@@ -36,6 +36,12 @@ return [
     // 自动搜索控制器
     'controller_auto_search' => false,
 
+
+    'c_pub'       => [
+        'img'    =>   '/public/uploads/images/',
+        'doc'    =>   '/public/uploads/doc/',
+    ],
+
     // 视图输出字符串内容替换
     'view_replace_str'       => [
         '__PUBLIC__'    =>  '/public',
@@ -43,6 +49,7 @@ return [
         '__ROOT__'    =>  DS,
         '__STATIC__'    =>  '/public/static',
         '__IMAGES__'    =>   '/public/uploads/images',
+        '__DOC__'    =>   '/public/uploads/doc',
         '__ADMIN__'    =>   '/public/static/admin',
     ],
 ];

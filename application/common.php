@@ -22,6 +22,27 @@ function pred($data){
     print_r($data);die;
 }
 
+function password($pwd,$salt){
+    return sha1( $salt . sha1($pwd) . $salt );
+}
+
+function pwd($pwd,$salt){
+    return md5( md5($pwd) . $salt );
+}
+
+function getTree($list,$pid=0,$level=0){
+    static $tree = array(); //定义一个静态的数组,此数组只会初始化一次
+    foreach ($list as $value) {
+        //先找出顶级栏目pid=0
+        if($value['pid']==$pid){
+            $value['level']=$level;//给当前数组$value加一个元素level
+            $tree[]=$value;
+            getTree($list,$value['id'],$level+1);//递归调用自身
+        }
+    }
+    return $tree;//返回结果
+}
+
 function returnJson($data, $message = 'ok', $code = 1){
     header("Content-Type:text/html; charset=utf-8");
     header('Access-Control-Allow-Origin: *');

@@ -1,5 +1,5 @@
 <?php
-namespace app\category\controller;
+namespace app\document\controller;
 
 use app\common\controller\Base;
 use think\Controller;
@@ -9,12 +9,16 @@ use think\Config;
 class Index extends Base
 {
     /**
-     * 类别列表
+     * 文档列表
      */
     public function index()
     {
         
         if( request()->isAjax() ){
+
+            $cat_id = input('cat_id');
+            $where['cat_id'] = ['eq',$cat_id];
+
             //接收所有传过来的post数据
             $datatables = request()->post();
             //得到排序的方式
@@ -24,17 +28,17 @@ class Index extends Base
             $limit_length = $datatables['length'];
             //得到搜索的关键词
             $search = $datatables['search']['value'];
-            $where = [];
+            
             if($search){
-                $where['cat_name'] = ['like', "%{$search}%"];
+                $where['doc_name'] = ['like', "%{$search}%"];
             }
             
-            $data = Db::name('category')
+            $data = Db::name('document')
                     ->where($where)
-                    ->order("cat_id $order")
+                    ->order("doc_id $order")
                     ->limit( $limit_start,$limit_length )
                     ->select();
-            $cnt = Db::name('category')->where($where)->count();
+            $cnt = Db::name('document')->where($where)->count();
             
             $list = [
                 'draw'=> request()->post('draw'), // ajax请求次数，作为标识符
@@ -53,29 +57,21 @@ class Index extends Base
      */
     public function add(){
 
+        if(!input('cat_id')) $this->error('参数错误!');
+
         if( request()->isPost() ){
             $data = input('post.');
-
-            if(!$data['cat_name']) $this->error('类别名称必须填写！');
-
-            if( isset($data['img']) ){
-                
-                $saveName = request()->time().rand(0,99999) . '.png';
-
-                $img=base64_decode($data['img']);
-                //生成文件夹
-                $names = "category" ;
-                $name = "category/" .date('Ymd',time()) ;
-                if (!file_exists(ROOT_PATH . Config('c_pub.img').$names)){ 
-                    mkdir(ROOT_PATH . Config('c_pub.img').$names,0777,true);
-                } 
-                //保存图片到本地
-                file_put_contents(ROOT_PATH . Config('c_pub.img').$name.$saveName,$img);
-
-                $data['img'] = $name.$saveName;
-            }
             
-            if ( Db::name('category')->insert($data) ) {
+            if(!$data['doc_name']) $this->error('类别名称必须填写！');
+
+            //文档处理
+            if($_FILES['url']['error'] == 0){
+                $data['url'] = $this->public_doc('','url');
+            }else{
+                $this->error('请上传文档！');
+            }
+            $data['add_time'] = time();
+            if ( Db::name('document')->insert($data) ) {
                 $this->success('添加成功');
             }else {
                 $this->error('添加失败');
@@ -90,65 +86,64 @@ class Index extends Base
      */
     public function edit(){
 
-        $info = Db::name('category')->where('cat_id',input('cat_id'))->find();
-
+        $info = Db::name('document')->where('doc_id',input('doc_id'))->find();
+        
         if( request()->isPost() ){
             $data = input('post.');
 
-            if(!$data['cat_name']) $this->error('类别名称必须填写！');
+            if(!$data['doc_name']) $this->error('文档名称必须填写！');
 
-            if( isset($data['img']) ){
-                
-                $saveName = request()->time().rand(0,99999) . '.png';
-
-                $img=base64_decode($data['img']);
-                //生成文件夹
-                $names = "category" ;
-                $name = "category/" .date('Ymd',time()) ;
-                if (!file_exists(ROOT_PATH . Config('c_pub.img').$names)){ 
-                    mkdir(ROOT_PATH . Config('c_pub.img').$names,0777,true);
-                } 
-                //保存图片到本地
-                file_put_contents(ROOT_PATH . Config('c_pub.img').$name.$saveName,$img);
-
-                $data['img'] = $name.$saveName;
-
-                if($info['img']){
-                    @unlink( ROOT_PATH . Config('c_pub.img') . $info['img'] );
-                }
+            //文档处理
+            if($_FILES['url']['error'] == 0){
+                $data['url'] = $this->public_doc('','url');
+                @unlink( ROOT_PATH . Config('c_pub.img') . $info['url'] );
             }
-            
-            if ( Db::name('category')->update($data) !== false ) {
+            if ( Db::name('document')->update($data) !== false ) {
                 $this->success('修改成功');
             }else {
                 $this->error('修改失败');
             }
         }
-        
+
         return $this->fetch( '',[
             'info'  =>  $info,
         ]);
     }
 
     /*
+     * 预览文档
+     */
+    public function preview(){
+        $doc_id = input('doc_id');
+        if(!$doc_id) $this->error('参数错误！');
+
+        $info = Db::name('document')->find($doc_id);
+        if(!$info) $this->error('参数错误！');
+        $fileUrl = request()->domain() . '/public/uploads/doc/' . $info['url'];
+        header('HTTP/1.1 301 Moved Permanently');
+	    header('Location: https://view.officeapps.live.com/op/view.aspx?src='.$fileUrl);//fileUrl 必须是绝对路径
+
+    }
+
+    /*
      * 删除分类
      */
     public function del(){
-        $cat_id = input('id');
-        if(!$cat_id){
+        $doc_id = input('id');
+        if(!$doc_id){
             returnJson(100,'参数错误');
         }
-        $info = Db::name('category')->find($cat_id);
+        $info = Db::name('document')->find($doc_id);
         if(!$info){
             returnJson(100,'参数错误');
         }
-        // if( Db::name('document')->where('cat_id',$cat_id)->find() ){
+        // if( Db::name('document')->where('doc_id',$doc_id)->find() ){
         //     returnJson(100,'该类别含有文档，不能删除');
         // }
 
-        if( Db::name('category')->where('cat_id',$cat_id)->delete() ){
-            if( $info['img'] ){
-                @unlink( ROOT_PATH . Config('c_pub.img') . $info['img'] );
+        if( Db::name('document')->where('doc_id',$doc_id)->delete() ){
+            if( $info['url'] ){
+                @unlink( ROOT_PATH . Config('c_pub.url') . $info['url'] );
             }
             returnJson([],'删除分类成功！');
         }
@@ -160,10 +155,10 @@ class Index extends Base
      */
     public function is_show(){
         if( request()->isAjax() ){
-            $data['cat_id'] = input('id');
+            $data['doc_id'] = input('id');
             $data['is_show'] = input('is_show');
 
-            if( !$data['cat_id'] ){
+            if( !$data['doc_id'] ){
                 return json(['status'=>0,'info'=>lang('参数错误!')]);
             }
 
@@ -173,12 +168,12 @@ class Index extends Base
                 $status = ['status'=>1,'info'=>lang('隐藏成功!')];
             }
 
-            $info = Db::name('category')->find($data['cat_id']);
+            $info = Db::name('document')->find($data['doc_id']);
             if( !$info ){
                 return json(['status'=>0,'info'=>lang('显示或隐藏失败!')]);
             }
             
-            $res = Db::name('category')->update($data,$data['cat_id']);
+            $res = Db::name('document')->update($data,$data['doc_id']);
             return json($status);;
         }
     }

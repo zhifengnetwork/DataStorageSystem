@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link href="__ADMIN__/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="__ADMIN__/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="__ADMIN__/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+<link href="__ADMIN__/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>{:lang(\'添加权限\')}</title>
+</head>
+<body>
+<div class="pd-20">
+	<form action="" method="post" class="form form-horizontal">
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>{:lang(\'权限名称\')}:</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" value="" placeholder="" id="user-name" name="auth_name" datatype="*2-16" nullmsg="{:lang(\'权限名称不能为空\')}">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>{:lang(\'父级名称\')}:</label>
+			<div class="formControls col-5"> <span class="select-box" style="width:150px;">
+				<select class="select" name="auth_pid" size="1">
+					<option value="0">{:lang(\'作为顶级\')}</option>
+					{volist name="topAuth" id="vo"}
+					<option value="{$vo.auth_id}">{$vo.auth_name}</option>
+					{/volist}
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>{:lang(\'作为菜单\')}:</label>
+			<div class="formControls col-5 skin-minimal">
+				<div class="radio-box">
+					<input type="radio" id="is_menu-1" value="1" checked="checked" name="is_menu" datatype="*" nullmsg="{:lang(\'请选择是否作为菜单\')}!">
+					<label for="is_menu-1">{:lang(\'是\')}</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="is_menu-2" value="0" name="is_menu">
+					<label for="is_menu-2">{:lang(\'否\')}</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-3">{:lang(\'访问路径\')}:</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" placeholder="示例：Admin/index/index" name="url">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-3">{:lang(\'排序\')}:</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" value="1" name="sort">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		<div class="row cl">
+			<div class="col-9 col-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;{:lang(\'提交\')}&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="__ADMIN__/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/Validform/5.3.2/Validform.min.js"></script> 
+<script type="text/javascript" src="__ADMIN__/lib/layer/1.9.3/layer.js"></script> 
+<script type="text/javascript" src="__ADMIN__/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ADMIN__/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	// $("#form-admin-add").Validform({
+	// 	tiptype:2,
+	// 	callback:function(form){
+	// 		form[0].submit();
+	// 		var index = parent.layer.getFrameIndex(window.name);
+	// 		parent.$('.btn-refresh').click();
+	// 		parent.layer.close(index);
+	// 	}
+	// });
+});
+</script>
+</body>
+</html>

@@ -89,6 +89,22 @@ class Index extends Base
     }
 
     /**
+     * 修改密码
+     */
+    public function edit_pwd(){
+        if( request()->isPost() ){
+            $data = input('post.');
+            if(!$data['user_id'] || !$data['pwd'] ) $this->error('参数错误！');
+            $info = Db::name('member')->find($data['user_id']);
+            if(!$info) $this->error('参数错误！');
+            $data['pwd'] = pwd($data['pwd'],$info['salt']);
+            Db::name('member')->where(['user_id'=>$data['user_id']])->update(['pwd'=>$data['pwd']]);
+            $this->success('修改成功');
+        }
+        return $this->fetch();
+    }
+
+    /**
      * 删除用户
      */
     public function del_member(){

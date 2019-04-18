@@ -19,10 +19,10 @@
 <script type="text/javascript" src="__LIB__/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>类别管理</title>
+<title>文档管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 类别管理 <span class="c-gray en">&gt;</span> 类别列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文档管理 <span class="c-gray en">&gt;</span> 文档列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="pd-20">
   <!-- <div class="text-c"> 日期范围：
     <input type="text" onfocus="WdatePicker({maxDate:'#F{ $dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
@@ -34,17 +34,17 @@
   <div class="cl pd-5 bg-1 bk-gray mt-20">
     <span class="l">
     <!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="icon-trash"></i> 批量删除</a> -->
-    <a href="javascript:;" onclick="add('添加类别','{:url(\'Category/index/add\')}')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加类别</a></span>
+    <a href="javascript:;" onclick="add('添加文档','{:url(\'Document/index/add\',[\'cat_id\'=>$Request.param.cat_id],false)}')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加文档</a></span>
   </div>
   <table class="table table-border table-bordered table-hover table-bg table-sort">
     <thead>
       <tr class="text-c">
         <th width="25"><input type="checkbox" name="" value=""></th>
         <th width="80">ID</th>
-        <th>类别名称</th>
-        <th>类别图片</th>
-        <th>是否显示</th>
+        <th>文档名称</th>
+        <!-- <th>文档</th> -->
         <th>描述</th>
+        <th>是否显示</th>
         <th>排序</th>
         <th>操作</th>
       </tr>
@@ -78,24 +78,23 @@ $('.table-sort').dataTable({
 	"StateSave": true,//状态保存
 	
   "columnDefs":[{
-     "targets": [0,2,3,4,5,7],  // 模板栏目列的下标[下标从0开始的,-1表示倒数第一个]
+     "targets": [0,2,3,4,5,-1],  // 模板栏目列的下标[下标从0开始的,-1表示倒数第一个]
      "orderable": false   // 这里固定是false
   }],
   "serverSide": true,
   "ajax": {               // 使用ajax到后台服务获取数据
       // 请求数据的后台地址，这个地址必须返回的是json格式[注意，修改对应的地址]
-      "url": "{:url('category/index/index')}", 
+      "url": "{:url('document/index/index',['cat_id'=>$Request.param.cat_id])}", 
       "type": "POST",     // ajax的请求方法
       
   },
   "columns": [
 
       {'data':'a',"defaultContent":""},
-      {'data':'cat_id'},
-      {'data':'cat_name'},
+      {'data':'doc_id'},
       {'data':'b',"defaultContent":""},
-      {'data':'is_show'},
       {'data':'desc'},
+      {'data':'is_show'},
       {'data':'sort'},
       {'data':'c',"defaultContent":""},
 
@@ -103,18 +102,17 @@ $('.table-sort').dataTable({
   "createdRow": function(row,data,dataIndex){
     
     $(row).addClass('text-c');
-    $(row).children().first().html('<input type="checkbox" name="cat_id[]" value="'+data.cat_id+'" />');
+    $(row).children().first().html('<input type="checkbox" name="doc_id[]" value="'+data.doc_id+'" />');
 
-   	var cat_img = "<img width='200' src='__IMAGES__/";
-   		cat_img+=data.img;
-   		cat_img+="' />";
-   	$(row).children().eq(3).html(cat_img);
+   	// var url = "<a title='预览文档' target='_blank' href='{:url(\'document/index/preview\',\'\',false)}/doc_id/"+data.doc_id+"'>"+data.doc_name+"</a>";
+   	var url = "<a title='预览文档' target='_blank' href='{:url(\'document/index/preview\',\'\',false)}/doc_id/"+data.doc_id+"'>"+data.doc_name+"</a>";
+   	$(row).children().eq(2).html(url);
 
     var is_show = '';
     if(data.is_show){
-      is_show = '<span onclick="is_show(this,'+data.cat_id+','+data.is_show+')" class="label label-success radius">显示</span>';
+      is_show = '<span onclick="is_show(this,'+data.doc_id+','+data.is_show+')" class="label label-success radius">显示</span>';
     }else{
-      is_show = '<span onclick="is_show(this,'+data.cat_id+','+data.is_show+')" class="label label-defaunt radius">不显示</span>';
+      is_show = '<span onclick="is_show(this,'+data.doc_id+','+data.is_show+')" class="label label-defaunt radius">不显示</span>';
     }
     $(row).children().eq(4).html( is_show );
 
@@ -132,9 +130,8 @@ $('.table-sort').dataTable({
     }
     // $(row).children().eq(7).html( time(data.add_time) );
 
-    var html = "<a title=\"{:lang(\'资料\')}\" href=\"{:url('Document/index/index','',false)}/cat_id/"+data.cat_id+"\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe627;</i></a> ";
-    html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('category/index/edit','',false)}/cat_id/"+data.cat_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
-    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.cat_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    var html = "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('Document/index/edit','',false)}/doc_id/"+data.doc_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.doc_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
     $(row).children().last().html(html);
   }
 });
@@ -149,7 +146,7 @@ function edit(title,url,w=1120,h=700){
 function del(obj,id){
   layer.confirm('{:lang(\'确认要删除吗\')}?',function(index){
     //此处请求后台程序，下方是成功后的前台处理……
-    $.post("{:URL('category/index/del')}" ,{'id':id} ,function(data){
+    $.post("{:URL('Document/index/del')}" ,{'id':id} ,function(data){
       if( data.status==1 ){
         $(obj).parents("tr").remove();
         layer.msg('{:lang(\'已删除\')}!',{icon:1,time:1000});
@@ -171,7 +168,7 @@ function is_show(obj,id,is_show){
   }
   //此处请求后台程序，下方是成功后的前台处理……
   
-  $.post("{:URL('category/index/is_show')}" ,{'id':id,'is_show':d} ,function(msg){
+  $.post("{:URL('Document/index/is_show')}" ,{'id':id,'is_show':d} ,function(msg){
     if( msg.status ){
       $(obj).parent().html( show );
       layer.msg(msg.info,{icon: 1,time:1000});
