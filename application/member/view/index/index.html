@@ -47,7 +47,7 @@
 						<th width="40">性别</th>
 						<th width="90">手机</th>
 						<th width="150">邮箱</th>
-						<th width="">地址</th>
+						<th width="">角色</th>
 						<th width="130">加入时间</th>
 						<th width="70">状态</th>
 						<th width="100">操作</th>
@@ -62,7 +62,7 @@
 						<td>{$vo.name}</td>
 						<td>{$vo.mobile}</td>
 						<td>{$vo.email}</td>
-						<td class="text-l">未填</td>
+						<td>{$vo.role_name}</td>
 						<td>{$vo.date}</td>
 						<td class="td-status">
 							{if condition="$vo.status == 1"}

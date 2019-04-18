@@ -59,7 +59,7 @@ class Index extends Base
         $count['activity'] = $ActivityList->where(['admin_id'=>$admin_id])->count();
 
         $MemberList = new MemberList();
-        $count['member'] = $MemberList->where(['admin_id'=>$admin_id])->count();
+        $count['member'] = $MemberList->count();
 
         $this->assign('count',$count);
 

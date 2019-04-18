@@ -21,7 +21,8 @@ class Index extends Base
     public function index()
     {
         $Member = new MemberList();
-        $data = $Member->get_member_list();
+        $data = $Member->alias('m')->join('role r','r.role_id=m.role_id','left')->field('m.*,r.role_name')->select();
+        
         $this->assign('data',$data);
         return $this->fetch();
     }
