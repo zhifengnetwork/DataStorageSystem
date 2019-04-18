@@ -24,8 +24,6 @@
 <body>
 <div class="page-container">
 	<p class="f-20 text-success">欢迎使用 CRM（客户关系管理）后台！ <span class="f-14">v3.1</span></p>
-	<p>登录次数：{$login_time} </p>
-	<p>上次登录IP：{$log.ip}  上次登录时间：{$log.date}</p>
 	<table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr>
@@ -36,7 +34,6 @@
 				<th>图片库</th>
 				<th>优惠券</th>
 				<th>活动数</th>
-				<th>客户数</th>
 				
 			</tr>
 		</thead>
@@ -46,7 +43,6 @@
 				<td>{$count['pic']}</td>
 				<td>{$count['card']}</td>
 				<td>{$count['activity']}</td>
-				<td>{$count['member']}</td>
 				
 			</tr>
 			
@@ -61,15 +57,13 @@
 		<tbody>
 			<tr>
 				<th width="30%">登录名</th>
-				<td><span id="lbServerName">{$username}</span></td>
+				<td><span id="lbServerName">{$Think.session.username}</span></td>
 			</tr>
 			
 		</tbody>
 	</table>
 </div>
 
-
-{include file="public/foot" /}
 
 
 <script type="text/javascript" src="/public/lib/jquery/1.9.1/jquery.min.js"></script> 

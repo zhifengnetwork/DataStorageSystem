@@ -254,6 +254,7 @@ class Index extends Base
         session('admin_id',null);
         session('role_id',null);
         session('admin_name',null);
+        session('role_name',null);
         session('is_login',null);
         $this->success( lang('退出成功!') ,'Admin/Index/login',1);
 	}

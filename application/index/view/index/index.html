@@ -1,5 +1,5 @@
 ﻿{include file="public/header"}
-	{include file="public/left"}
+	{$left}
 	<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
 	{include file="public/welcome"}
 
@@ -40,7 +40,7 @@
 				maxmin: true,
 				shade: 0.4,
 				title: '查看信息',
-				content: '<div style="text-align:center;">客户名：{$username}</div>'
+				content: '<div style="text-align:center;">客户名：{$Think.session.username}</div>'
 			});
 		}
 

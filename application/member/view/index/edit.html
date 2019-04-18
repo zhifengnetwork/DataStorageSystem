@@ -15,6 +15,17 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<select class="input-text" name="role_id">
+					<option value="">{:lang(\'请选择\')}</option>
+					{volist name="role" id="val"} 
+						<option {if condition="$val.role_id eq $data.role_id"} selected {/if} value="{$val.role_id}">{$val.role_name}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">性别：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<div class="radio-box">

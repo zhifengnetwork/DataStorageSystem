@@ -8,6 +8,9 @@ use app\card\model\CardList;
 use app\activity\model\ActivityList;
 use app\member\model\MemberList;
 use app\admin\model\AdminLog;
+use think\Session;
+use app\admin\model\Role;
+use app\admin\model\Auth;
 
 class Index extends Base
 {
@@ -17,11 +20,27 @@ class Index extends Base
     public function index()
     {
        
-        $username = session('username');
-        $this->assign('username',$username);
+        return $this->fetch('',[
+            'left'  =>  $this->left(),
+        ]);
+    }
+
+    public function left(){
+        //获取当前登录管理员的角色id
+        $role_id = Session::get('user_role_id');
+        $role = new Role;
+        $auth = new Auth;
+        $RoleInfo = $role->find( $role_id );
+        $where = "auth_pid=0 AND auth_id IN({$RoleInfo['role_auth_ids']})";
+        $TopAuth = $auth->getAuth($where);
         
-        
-        return $this->fetch();
+        $where = "auth_pid!=0 AND auth_id IN({$RoleInfo['role_auth_ids']}) AND is_menu=1";
+        $sonAuth = $auth->getAuth($where);
+    	
+    	return $this->fetch('public/left',[
+            'TopAuth'   =>  $TopAuth,
+            'sonAuth'   =>  $sonAuth,
+        ]);
     }
 
     /**
@@ -42,19 +61,11 @@ class Index extends Base
         $ActivityList = new ActivityList();
         $count['activity'] = $ActivityList->where(['admin_id'=>$admin_id])->count();
 
-        $MemberList = new MemberList();
-        $count['member'] = $MemberList->where(['admin_id'=>$admin_id])->count();
 
         $this->assign('count',$count);
 
-        $this->assign('username',session('username'));
-
-        $AdminLog = new AdminLog();
-        $log = $AdminLog->get_last_log($admin_id);
-        $this->assign('log',$log);
         
-        $login_time = $AdminLog->get_login_time($admin_id);
-        $this->assign('login_time',$login_time);
+        
 
         return $this->fetch();
     }

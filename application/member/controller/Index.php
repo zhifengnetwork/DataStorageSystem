@@ -3,6 +3,7 @@ namespace app\member\controller;
 use app\common\controller\Base;
 use app\member\model\MemberList;
 use think\Db;
+use app\admin\model\Role;
 
 class Index extends Base
 {
@@ -54,7 +55,9 @@ class Index extends Base
             exit;
         }
 
-        return $this->fetch();
+        return $this->fetch('',[
+            'role'  =>  Role::select(),
+        ]);
     }
 
 
@@ -84,7 +87,9 @@ class Index extends Base
             $this->success('修改成功','edit?user_id='.$user_id);
             exit;
         }
-        return $this->fetch();
+        return $this->fetch('',[
+            'role'  =>  Role::select(),
+        ]);
     }
 
     /**
