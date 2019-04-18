@@ -123,34 +123,27 @@ class Index extends Base
 
     }
 
-    public function level()
-    {
+    /**
+     * 批量删除
+     */
+    public function delAll(){
+        if( request()->isPost() ){
+            $user_id = isset( input('post.')['user_id'] );
 
-        return $this->fetch();
-    }
+            if( !$user_id ){
+                $this->error( lang('请勾选要批量删除的ID') );
+            }
 
-    public function scoreoperation()
-    {
-
-        return $this->fetch();
-    }
-
-    public function record_browse()
-    {
-
-        return $this->fetch();
-    }
-
-    public function record_download()
-    {
-
-        return $this->fetch();
-    }
-
-    public function record_share()
-    {
-
-        return $this->fetch();
+            $user_id = input('post.')['user_id'];
+            $user_id = implode(',',$user_id);
+            
+            $res = MemberList::where('user_id','in',$user_id)->delete();
+            if( $res ){
+                $this->success( lang('批量删除成功!') );
+            }else{
+                $this->error( lang('批量删除失败!') );
+            }
+        }
     }
 
     /**

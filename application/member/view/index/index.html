@@ -33,8 +33,11 @@
 			<input type="text" class="input-text" style="width:250px" placeholder="输入客户名称、电话、邮箱" id="" name="">
 			<button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜客户</button>
 		</div> -->
-		<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i
-					 class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('添加客户','/index.php/member/index/add.html','','510')"
+		<form action="{:url('member/index/delAll')}" method="post">
+		<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
+			<!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> -->
+			<input type="submit" class="btn btn-danger radius" value=" 批量删除" />
+			<a href="javascript:;" onclick="member_add('添加客户','/index.php/member/index/add.html','','510')"
 				 class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加客户</a></span> <span class="r">共有数据：<strong>{$data|count}</strong>
 				条</span> </div>
 		<div class="mt-20">
@@ -56,7 +59,7 @@
 				<tbody>
 					{volist name="data" id="vo"}
 					<tr class="text-c">
-						<td><input type="checkbox" value="1" name=""></td>
+						<td><input type="checkbox" value="{$vo.user_id}" name="user_id[]"></td>
 						<td>{$vo.user_id}</td>
 						<td><u style="cursor:pointer" class="text-primary" onclick="member_show('{$vo.name}','/index.php/member/index/show.html?user_id={$vo.user_id}','10001','360','400')">{$vo.name}</u></td>
 						<td>{$vo.name}</td>
@@ -93,6 +96,7 @@
 				</tbody>
 			</table>
 		</div>
+		</form>
 	</div>
 	<!--_footer 作为公共模版分离出去-->
 	<script type="text/javascript" src="/public/lib/jquery/1.9.1/jquery.min.js"></script>
