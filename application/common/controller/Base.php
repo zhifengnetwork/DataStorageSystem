@@ -12,18 +12,16 @@ class Base extends Controller
     function _initialize() 
     {
 		$this->checkLogin();
-		
+		$this->checkAuth();
 		
 	}
 	
-	//登录检测
 	public function checkLogin(){
 		$m = request()->module();
 		$c = request()->controller();
 		$a = request()->action();
 		$action = array('admin/index/login','user/login/index');
 		$res = !in_array( strtolower( "$m/$c/$a" ), $action);
-		// 验证用户登录状态
 		if( $res && Session::has('is_login') != 1  ){
 			if( strtolower( "$m" ) == 'admin' ){
 				$this->redirect( url('Admin/Index/login') );
@@ -35,6 +33,34 @@ class Base extends Controller
 
 		}
 	}
+
+
+	public function checkAuth(){
+		$m = request()->module();
+		$c = request()->controller();
+		$a = request()->action();
+		$auth_key = "$m/$c/$a";
+
+		$role_id = Session::get('role_id');
+		
+		$role_info = Db('role')->find($role_id);
+		
+		$allow = array(
+			'admin/index/index',	//后台首页
+			'admin/index/top',	//后台顶部
+			'admin/index/left',	//后台菜单
+			'admin/index/main',	//后台主页
+			'admin/index/login',	//后台登录页面
+			'admin/index/logout',	//后台退出页面
+			'admin/index/code',	//后台登录页面的验证码
+			'admin/index/welcome',	//后台菜单页
+		);
+		$res = !in_array( strtolower( $auth_key ), $allow);
+		if( $res && strpos( strtolower( $role_info['urls'] ), strtolower($auth_key) ) === false ){
+			$this->error( lang("您不具备当前操作的权限") ,url('admin/index/index'));die;
+		}
+	}
+
 
     //文档处理
 	public function public_doc($doc_path='',$file_name='',$filen='',$name=''){

@@ -19,9 +19,8 @@ class Index extends Base
     */
     public function index()
     {
-        $admin_id = session('admin_id');
         $Member = new MemberList();
-        $data = $Member->get_member_list($admin_id);
+        $data = $Member->get_member_list();
         $this->assign('data',$data);
         return $this->fetch();
     }

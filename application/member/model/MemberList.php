@@ -11,10 +11,8 @@ class MemberList extends \think\Model
     /**
      * 获取客户列表
      */
-    public static function get_member_list($admin_id){
-        $data = self::where(['admin_id'=>$admin_id])
-        ->order('user_id desc')
-        ->select();
+    public static function get_member_list(){
+        $data = self::order('user_id desc')->select();
         if(!$data){
             return [];
         }

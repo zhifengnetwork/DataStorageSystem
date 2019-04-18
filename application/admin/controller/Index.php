@@ -8,6 +8,7 @@ use app\card\model\CardList;
 use app\activity\model\ActivityList;
 use app\member\model\MemberList;
 use app\admin\model\Auth;
+use app\admin\model\Role;
 
 class Index extends Base
 {
@@ -17,12 +18,27 @@ class Index extends Base
      */
     public function index()
     {
-       
-        $admin_name = session('admin_name');
-        $this->assign('admin_name',$admin_name);
+        return $this->fetch('',[
+            'left'  =>  $this->left(),
+        ]);
+    }
+
+    public function left(){
+        //获取当前登录管理员的角色id
+        $role_id = Session::get('role_id');
+        $role = new Role;
+        $auth = new Auth;
+        $RoleInfo = $role->find( $role_id );
+        $where = "auth_pid=0 AND auth_id IN({$RoleInfo['role_auth_ids']})";
+        $TopAuth = $auth->getAuth($where);
         
-        
-        return $this->fetch();
+        $where = "auth_pid!=0 AND auth_id IN({$RoleInfo['role_auth_ids']}) AND is_menu=1";
+        $sonAuth = $auth->getAuth($where);
+    	
+    	return $this->fetch('public/left',[
+            'TopAuth'   =>  $TopAuth,
+            'sonAuth'   =>  $sonAuth,
+        ]);
     }
 
     /**
@@ -97,7 +113,7 @@ class Index extends Base
     {   
         if( request()->isPost() ){
             $data = input('post.');
-            if( !$data['admin_name'] || !$data['password'] ) $this->error('请填写完整信息！');
+            if( !$data['admin_name'] || !$data['password'] || !$data['role_id'] ) $this->error('请填写完整信息！');
 
             $data['salt'] = mt_rand(0,999999);
             $data['password'] = password($data['password'],$data['salt']);
@@ -108,7 +124,9 @@ class Index extends Base
             }
         }
 
-        return $this->fetch();
+        return $this->fetch('',[
+            'role'  =>  Role::select(),
+        ]);
     }
 
     /*
@@ -123,8 +141,12 @@ class Index extends Base
         if( request()->isPost() ){
             $data = input('post.');
 
+            if( !$data['role_id'] ) $this->error('请填写完整信息！');
+
             if($data['password']){
                 $data['password'] = password($data['password'],$info['salt']);
+            }else{
+                unset($data['password']);
             }
             
             if( Db::name('admin')->update($data,$data['admin_id']) !== false ) {
@@ -136,6 +158,7 @@ class Index extends Base
 
         return $this->fetch('',[
             'info'  =>  $info,
+            'role'  =>  Role::select(),
         ]);
     }
 
@@ -200,19 +223,20 @@ class Index extends Base
             $admin = Db::name('admin')->where('admin_name','=',$data['admin_name'])->find();
 
             if( !$admin ) $this->error('用户不存在！');
+            if( !$admin['status'] ) $this->error('该账号已禁用！');
 
             $data['password'] = password($data['password'],$admin['salt']);	//加密
+            
             if( $data['password'] == $admin['password'] ){
                 
                 // $role = new RoleModel;
-                // $role = $role->field('role_name')->find($user['role_id']);
+                $role = new Role;
+                $role = $role->field('role_name')->find($admin['role_id']);
                 //保存管理员登录信息
                 Session::set('admin_id' ,$admin['admin_id']);	//管理员ID
                 Session::set('admin_name' ,$admin['admin_name']);	//管理员账号
-                // Session::set('role_id' ,$admin['role_id']);	//当前管理员角色ID
-                // Session::set('role_name' ,$role['role_name']);	//当前管理员角色名称
-                // Session::set('login_ip' ,$admin['login_ip']);	//上次登录IP
-                // Session::set('login_time' ,$admin['login_time']);	//上次登录时间
+                Session::set('role_id' ,$admin['role_id']);	//当前管理员角色ID
+                Session::set('role_name' ,$role['role_name']);	//当前管理员角色名称
                 Session::set('is_login',1);
 
                 $this->success('登录成功！',url('admin/index/index'));
@@ -222,6 +246,17 @@ class Index extends Base
 
         return $this->fetch();
     }
+
+    /**
+	 * 退出登录
+	 */
+	public function logout(){
+        session('admin_id',null);
+        session('role_id',null);
+        session('admin_name',null);
+        session('is_login',null);
+        $this->success( lang('退出成功!') ,'Admin/Index/login',1);
+	}
     
     /**
      * 权限列表
@@ -298,7 +333,7 @@ class Index extends Base
     }
 
     /**
-     * 批量删除
+     * 权限批量删除
      */
     public function auth_delAll(){
         if( request()->isPost() ){
@@ -315,5 +350,147 @@ class Index extends Base
             }
         }
     }
+
+
+    /**
+	 * 角色列表
+	 */
+    public function role_list(){
+        $role = new Role;
+    	$list = $role->alias('r')
+        // ->join('r LEFT JOIN ts_auth a on FIND_IN_SET(a.auth_id,r.role_auth_ids)')
+        ->join('auth a','FIND_IN_SET(a.auth_id,r.role_auth_ids)','LEFT')
+        ->group('r.role_id')
+        ->field('r.*,GROUP_CONCAT(a.auth_name) as name')
+        ->paginate(10); 
+
+
+        return $this->fetch('',[
+            'list'  =>  $list,
+            'count'  =>  $role->count(),
+        ]);
+    }
+    /**
+     * 添加
+     */
+    public function role_add(){
+    	if( request()->isPost() ){
+    		$data = input('post.');
+    		//判断值是否为空
+    		if( empty($data['role_name']) ){
+    			$this->error( lang('角色名称必须填写!') );
+    		}
+
+    		$res = Role::insert($data);
+    		if( $res ){
+    			$this->success( lang('添加角色成功!') );
+    		}else{
+    			$this->error( lang('添加角色失败!') );
+    		}
+    	}
+
+        return $this->fetch('',[
+        ]);
+    }
+
+    /**
+     * 修改
+     */
+    public function role_edit($role_id){
+        if( request()->isPost() ){
+            $data = input('post.');
+
+            if( Role::update($data) !== false ){
+                $this->success( lang('修改成功!') );
+            }else{
+                $this->error( lang('修改失败!') );
+            }
+        }
+
+        $info = Role::find($role_id);
+        return $this->fetch('',[
+            'info'  =>  $info,
+        ]);
+    }
+
+    /**
+     * ajax删除
+     */
+    public function role_del(){
+        if( request()->isAjax() ){
+            $data['role_id'] = input('role_id');
+            $role = new Role;
+            $res = $role->where( 'role_id' ,'=' ,$data['role_id'] )->delete();
+            return $res;
+        }
+    }
+    /**
+     * 批量删除
+     */
+    public function role_delAll(){
+        if( request()->isPost() ){
+            if( input('post.') == null ){
+                $this->error( lang('请勾选要批量删除的ID') );
+            }
+            $role_id = input('post.')['role_id'];
+            $res = Role::destroy($role_id);
+            if( $res ){
+                $this->success( lang('批量删除成功!') );
+            }else{
+                $this->error( lang('批量删除失败!') );
+            }
+        }
+    }
+
+    /**
+     * 分派权限
+     */
+    public function setauth($role_id){
+        $role = new Role;
+        $auth = new Auth;
+        if( request()->isPost() ){
+            $auth_id = isset(input('post.')['auth_id']) ? input('post.')['auth_id'] : '';
+            if( $auth_id != '' ){
+                $_POST['role_auth_ids'] = implode(',' ,input('post.')['auth_id']);
+                
+                $current_auth = $auth->getAuth("auth_id IN ({$_POST['role_auth_ids']})");
+                $urls = '';//声明一个变量用于存储权限的控制器-方法名
+                foreach ($current_auth as $val) {
+                    $urls .= $val['url'] . ',';
+                }
+                $_POST['urls'] = trim($urls,',');
+                unset($_POST['auth_id']);
+                
+            }else{
+                $_POST['role_auth_ids'] = '';
+                $_POST['urls'] = '';
+            }
+
+            $res = $role->update($_POST);
+            $this->success( lang('分派权限成功!') );
+
+        }
+
+        //判断,如果角色id为0,则返回上一页
+        if( $role_id < 1 ){
+            $this->error( lang('非法参数!') );die;
+        }
+
+        //根据对应的角色id获取对应的角色信息,并赋值模板中
+        $info = $role->find($role_id);
+
+        //获取所有顶级权限
+        $topAuth = $auth->getAuth();
+
+        //auth_pid不等于 0 的,都是子权限
+        $where = "auth_pid!=0 ";
+        $sonAuth = $auth->getAuth($where);
+        return $this->fetch('',[
+            'info'  =>  $info,
+            'topAuth'  =>  $topAuth,
+            'sonAuth'  =>  $sonAuth,
+        ]);
+    }
+
 
 }
