@@ -18,6 +18,7 @@ class Index extends Base
 
             $cat_id = input('cat_id');
             $where['cat_id'] = ['eq',$cat_id];
+            if( session('user_id') ) $where['is_show'] = ['eq','1'];
 
             //接收所有传过来的post数据
             $datatables = request()->post();
@@ -72,9 +73,9 @@ class Index extends Base
             }
             $data['add_time'] = time();
             if ( Db::name('document')->insert($data) ) {
-                $this->success('添加成功');
+                layer_close('添加成功');
             }else {
-                $this->error('添加失败');
+                layer_close('添加失败');
             }
         }
         
@@ -99,9 +100,9 @@ class Index extends Base
                 @unlink( ROOT_PATH . Config('c_pub.img') . $info['url'] );
             }
             if ( Db::name('document')->update($data) !== false ) {
-                $this->success('修改成功');
+                layer_close('修改成功');
             }else {
-                $this->error('修改失败');
+                layer_close('修改失败');
             }
         }
 
@@ -115,7 +116,7 @@ class Index extends Base
      */
     public function preview(){
         $doc_id = input('doc_id');
-        if(!$doc_id) $this->error('参数错误！');
+        if(!$doc_id) layer_close('参数错误！');
 
         $info = Db::name('document')->find($doc_id);
         if(!$info) $this->error('参数错误！');
@@ -159,18 +160,18 @@ class Index extends Base
             $data['is_show'] = input('is_show');
 
             if( !$data['doc_id'] ){
-                return json(['status'=>0,'info'=>lang('参数错误!')]);
+                return json(['code'=>0,'msg'=>lang('参数错误!')]);
             }
 
             if( $data['is_show'] ){
-                $status = ['status'=>1,'info'=>lang('显示成功!')];
+                $status = ['code'=>1,'msg'=>lang('显示成功!')];
             }else{
-                $status = ['status'=>1,'info'=>lang('隐藏成功!')];
+                $status = ['code'=>1,'msg'=>lang('隐藏成功!')];
             }
 
             $info = Db::name('document')->find($data['doc_id']);
             if( !$info ){
-                return json(['status'=>0,'info'=>lang('显示或隐藏失败!')]);
+                return json(['code'=>0,'msg'=>lang('显示或隐藏失败!')]);
             }
             
             $res = Db::name('document')->update($data,$data['doc_id']);

@@ -49,7 +49,7 @@ function returnJson($data, $message = 'ok', $code = 1){
     header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
     header('Access-Control-Allow-Methods: GET, POST, PUT');
     $result = array();
-    $result['status'] = $code;
+    $result['code'] = $code;
     $result['msg'] = $message;
     $result['data'] = $data;
     if(empty($data)){
@@ -58,6 +58,17 @@ function returnJson($data, $message = 'ok', $code = 1){
     }
     $json = json_encode($result,JSON_UNESCAPED_UNICODE);
     exit($json);
+}
+
+//关闭iframe子窗口
+function layer_close($ts=''){
+    if($ts){
+        echo '<script>alert("'.$ts.'")</script>';
+    }
+    echo '<script type="text/javascript" src="'.config('view_replace_str.__ADMIN__').'/lib/jquery/1.9.1/jquery.min.js"></script>';
+    echo '<script type="text/javascript" src="'.config('view_replace_str.__ADMIN__').'/js/H-ui.admin.js"></script>';
+    echo "<script>window.parent.location.reload();</script>";
+    echo "<script>layer_close();</script>";
 }
 
 function get_client_ip($type = 0) {

@@ -118,9 +118,9 @@ class Index extends Base
             $data['salt'] = mt_rand(0,999999);
             $data['password'] = password($data['password'],$data['salt']);
             if( Db::name('admin')->insert($data) ) {
-                $this->success('添加成功');
+                layer_close('添加成功');
             }else{
-                $this->error('添加失败');
+                layer_close('添加失败');
             }
         }
 
@@ -135,13 +135,13 @@ class Index extends Base
     public function admin_edit()
     {   
         $admin_id = input('admin_id');
-        if(!$admin_id) $this->error('参数错误！');
+        if(!$admin_id) layer_close('参数错误！');
         $info = Db::name('admin')->find($admin_id);
 
         if( request()->isPost() ){
             $data = input('post.');
 
-            if( !$data['role_id'] ) $this->error('请填写完整信息！');
+            if( !$data['role_id'] ) layer_close('请填写完整信息！');
 
             if($data['password']){
                 $data['password'] = password($data['password'],$info['salt']);
@@ -150,9 +150,9 @@ class Index extends Base
             }
             
             if( Db::name('admin')->update($data,$data['admin_id']) !== false ) {
-                $this->success('修改成功');
+                layer_close('修改成功');
             }else{
-                $this->error('修改失败');
+                layer_close('修改失败');
             }
         }
 
@@ -281,9 +281,9 @@ class Index extends Base
 
             $res = $auth->save($data);
             if( $res ){
-                $this->success( lang('添加权限成功!') );
+                layer_close('添加权限成功!');
             }else{
-                $this->error( lang('添加权限失败!') );
+                layer_close('添加权限失败!');
             }
         }
 
@@ -305,9 +305,9 @@ class Index extends Base
             
             $res = $auth->update($data);
             if( $res ){
-                $this->success( lang('修改权限成功!') );
+                layer_close('修改权限成功!');
             }else{
-                $this->error( lang('修改权限失败!') );
+                layer_close('修改权限失败!');
             }
         }
         
@@ -384,9 +384,9 @@ class Index extends Base
 
     		$res = Role::insert($data);
     		if( $res ){
-    			$this->success( lang('添加角色成功!') );
+    			layer_close('添加角色成功!');
     		}else{
-    			$this->error( lang('添加角色失败!') );
+    			layer_close('添加角色失败!');
     		}
     	}
 
@@ -402,9 +402,9 @@ class Index extends Base
             $data = input('post.');
 
             if( Role::update($data) !== false ){
-                $this->success( lang('修改成功!') );
+                layer_close('修改成功!');
             }else{
-                $this->error( lang('修改失败!') );
+                layer_close('修改失败!');
             }
         }
 

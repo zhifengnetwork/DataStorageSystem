@@ -105,7 +105,7 @@ $('.table-sort').dataTable({
     $(row).addClass('text-c');
     $(row).children().first().html('<input type="checkbox" name="cat_id[]" value="'+data.cat_id+'" />');
 
-   	var cat_img = "<img width='200' src='__IMAGES__/";
+   	var cat_img = "<img width='50' src='__IMAGES__/";
    		cat_img+=data.img;
    		cat_img+="' />";
    	$(row).children().eq(3).html(cat_img);
@@ -172,12 +172,11 @@ function is_show(obj,id,is_show){
   //此处请求后台程序，下方是成功后的前台处理……
   
   $.post("{:URL('category/index/is_show')}" ,{'id':id,'is_show':d} ,function(msg){
-    if( msg.status ){
+    if( msg.code ){
       $(obj).parent().html( show );
-      layer.msg(msg.info,{icon: 1,time:1000});
+      layer.msg(msg.msg,{icon: 1,time:1000});
     }else{
-      
-      layer.msg(msg.info,{icon: 5,time:1000});
+      layer.msg(msg.msg,{icon: 5,time:1500});
     }
   },'json');
 }
@@ -209,7 +208,7 @@ $(function(){
         width: 100%;
         height: 100%
     }
-    .mask_img img{position: relative;top: 30%;left: 50%;transform:scale(1.5,1.5)}
+    .mask_img img{position: relative;top: 30%;left: 50%;transform:scale(1.5,1.5);}
 </style>
 </body>
 </html>

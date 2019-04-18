@@ -147,7 +147,7 @@ function del(obj,id){
   layer.confirm('{:lang(\'确认要删除吗\')}?',function(index){
     //此处请求后台程序，下方是成功后的前台处理……
     $.post("{:URL('Document/index/del')}" ,{'id':id} ,function(data){
-      if( data.status==1 ){
+      if( data.code==1 ){
         $(obj).parents("tr").remove();
         layer.msg('{:lang(\'已删除\')}!',{icon:1,time:1000});
       }else{
@@ -169,12 +169,11 @@ function is_show(obj,id,is_show){
   //此处请求后台程序，下方是成功后的前台处理……
   
   $.post("{:URL('Document/index/is_show')}" ,{'id':id,'is_show':d} ,function(msg){
-    if( msg.status ){
+    if( msg.code ){
       $(obj).parent().html( show );
-      layer.msg(msg.info,{icon: 1,time:1000});
+      layer.msg(msg.msg,{icon: 1,time:1000});
     }else{
-      
-      layer.msg(msg.info,{icon: 5,time:1000});
+      layer.msg(msg.msg,{icon: 5,time:1600});
     }
   },'json');
 }
