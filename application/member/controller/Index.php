@@ -101,7 +101,7 @@ class Index extends Base
             
 
             $admin_id = session("admin_id");
-            $MemberList->where(['user_id'=>$user_id,'admin_id'=>$admin_id])->update(['name'=>$name,'sex'=>$sex,'mobile'=>$mobile,'beizhu'=>$beizhu,'role_id'=>$role_id]);
+            $MemberList->where(['user_id'=>$user_id])->update(['name'=>$name,'sex'=>$sex,'mobile'=>$mobile,'beizhu'=>$beizhu,'role_id'=>$role_id]);
 
             $this->success('修改成功','edit?user_id='.$user_id);
             exit;
