@@ -62,7 +62,7 @@
 						<td><input type="checkbox" value="{$vo.user_id}" name="user_id[]"></td>
 						<td>{$vo.user_id}</td>
 						<td><u style="cursor:pointer" class="text-primary" onclick="member_show('{$vo.name}','/index.php/member/index/show.html?user_id={$vo.user_id}','10001','360','400')">{$vo.name}</u></td>
-						<td>{$vo.name}</td>
+						<td>{if condition="$vo.sex eq 1"}男{elseif condition="$vo.sex eq 2"}女{else /}保密{/if}</td>
 						<td>{$vo.mobile}</td>
 						<td>{$vo.email}</td>
 						<td>{$vo.role_name}</td>

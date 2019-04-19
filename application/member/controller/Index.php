@@ -41,6 +41,18 @@ class Index extends Base
             $sex = input('sex');
             $mobile = input('mobile');
             $beizhu = input('beizhu');
+            $role_id = input('role_id');
+            $pwd = input('pwd');
+            if(!$role_id){
+                $this->error('请选择用户角色');
+            }
+            if(!$pwd){
+                $this->error('请填写登录密码');
+            }
+
+            $MemberList->role_id = $role_id;
+            $MemberList->salt = mt_rand(0,999999);
+            $MemberList->pwd = pwd($pwd,$MemberList->salt);
 
             $admin_id = session("admin_id");
             
@@ -81,6 +93,14 @@ class Index extends Base
             $sex = input('sex');
             $mobile = input('mobile');
             $beizhu = input('beizhu');
+
+            $role_id = input('role_id');
+            if(!$role_id){
+                $this->error('请选择用户角色');
+            }
+            
+
+            $MemberList->role_id = $role_id;
 
             $admin_id = session("admin_id");
             $MemberList->where(['user_id'=>$user_id,'admin_id'=>$admin_id])->update(['name'=>$name,'sex'=>$sex,'mobile'=>$mobile,'beizhu'=>$beizhu]);
