@@ -185,7 +185,13 @@ class Index extends Base
         $user_id = input('user_id');
         $status = input('status');
         $Member = new MemberList();
-        $Member::where(['user_id'=>$user_id])->update(['status'=>$status]);
+        $res = $Member::where(['user_id'=>$user_id])->update(['status'=>$status]);
+        if($res !== false){
+            return json(['code'=>1,'msg'=>lang('修改成功!')]);
+        }else{
+            return json(['code'=>0,'msg'=>lang('修改失败!')]);
+        }
+        
     }
 
 }
