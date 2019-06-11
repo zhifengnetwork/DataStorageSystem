@@ -22,7 +22,7 @@
 <title>文档管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文档管理 <span class="c-gray en">&gt;</span> 文档列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> <a href="{:url('category/index/index')}">类别列表</a> <span class="c-gray en">&gt;</span> 文档管理 <span class="c-gray en">&gt;</span> 文档列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="pd-20">
   <!-- <div class="text-c"> 日期范围：
     <input type="text" onfocus="WdatePicker({maxDate:'#F{ $dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
@@ -31,11 +31,19 @@
     <input type="text" class="input-text" style="width:250px" placeholder="输入客户名称、电话、邮箱" id="" name=""><button type="submit" class="btn btn-success" id="" name=""><i class="icon-search"></i> 搜客户</button>
 
   </div> -->
+  {if condition="$Think.session.is_login"}
   <div class="cl pd-5 bg-1 bk-gray mt-20">
     <span class="l">
     <!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="icon-trash"></i> 批量删除</a> -->
     <a href="javascript:;" onclick="add('添加文档','{:url(\'Document/index/add\',[\'cat_id\'=>$Request.param.cat_id],false)}')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加文档</a></span>
   </div>
+  {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'Document/index/add' ) )"}
+  <div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+    <!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="icon-trash"></i> 批量删除</a> -->
+    <a href="javascript:;" onclick="add('添加文档','{:url(\'Document/index/add\',[\'cat_id\'=>$Request.param.cat_id],false)}')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加文档</a></span>
+  </div>
+  {/if}{/if}
   <table class="table table-border table-bordered table-hover table-bg table-sort">
     <thead>
       <tr class="text-c">
@@ -129,9 +137,19 @@ $('.table-sort').dataTable({
           return   year+"-"+month+"-"+date+"   "+hour+":"+minute+":"+second;     
     }
     // $(row).children().eq(7).html( time(data.add_time) );
+    var html = "";
+    {if condition="$Think.session.is_login"}
+    html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('Document/index/edit','',false)}/doc_id/"+data.doc_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'Document/index/edit' ) )"}
+    html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('Document/index/edit','',false)}/doc_id/"+data.doc_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    {/if}{/if}
 
-    var html = "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('Document/index/edit','',false)}/doc_id/"+data.doc_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    {if condition="$Think.session.is_login"}
     html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.doc_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'Document/index/del' ) )"}
+    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.doc_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    {/if}{/if}
+
     $(row).children().last().html(html);
   }
 });

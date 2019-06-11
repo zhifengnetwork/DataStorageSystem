@@ -57,6 +57,7 @@ class Base extends Controller
 			'admin/index/logout',	//后台退出页面
 			'admin/index/code',	//后台登录页面的验证码
 			'admin/index/welcome',	//后台菜单页
+			'user/login/index',	//后台菜单页
 		);
 		$res = !in_array( strtolower( $auth_key ), $allow);
 		if( $res && strpos( strtolower( $role_info['urls'] ), strtolower($auth_key) ) === false ){
@@ -83,6 +84,7 @@ class Base extends Controller
 			'index/index/logout',	//后台退出页面
 			'index/index/code',	//后台登录页面的验证码
 			'index/index/welcome',	//后台菜单页
+			'admin/index/login',	//后台菜单页
 		);
 		$res = !in_array( strtolower( $auth_key ), $allow);
 		if( $res && strpos( strtolower( $role_info['urls'] ), strtolower($auth_key) ) === false ){

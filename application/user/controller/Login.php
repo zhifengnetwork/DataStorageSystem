@@ -29,12 +29,13 @@ class Login extends Controller
             
             if($res){
                 $role = new Role;
-                $role = $role->field('role_name')->find($res['role_id']);
-                session('user_id',$res['user_id']);
-                session('username',$res['name']);
-                session('user_role_id',$res['role_id']);
-                session('user_role_name',$role['role_name']);
-                session('user_is_login',1);
+                $role = $role->find($res['role_id']);
+                Session::set('user_id',$res['user_id']);
+                Session::set('username',$res['name']);
+                Session::set('user_role_id',$res['role_id']);
+                Session::set('user_role_auth',$role);
+                Session::set('user_role_name',$role['role_name']);
+                Session::set('user_is_login',1);
                 
                 //添加登录记录
                 // admin_log(session('admin_id'));
@@ -68,10 +69,10 @@ class Login extends Controller
                $this->error("登录失败");
             }
             if(isset($res['admin_id'])){
-                session('admin_id',$res['admin_id']);
-                session('username',$res['username']);
+                Session::set('admin_id',$res['admin_id']);
+                Session::set('username',$res['username']);
                 //添加登录记录
-                admin_log(session('admin_id'));
+                admin_log(Session::get('admin_id'));
                 $this->redirect('index/index/index');
             }else{
                 $this->error("登录失败");
@@ -89,11 +90,11 @@ class Login extends Controller
      * 退出登录
      */
     public function logout(){
-        session('user_id',null);
-        session('user_role_id',null);
-        session('username',null);
-        session('user_is_login',null);
-        session('user_role_name',null);
+        Session::set('user_id',null);
+        Session::set('user_role_id',null);
+        Session::set('username',null);
+        Session::set('user_is_login',null);
+        Session::set('user_role_name',null);
         $this->success( lang('退出成功!') ,'user/login/index',1);
     } 
 }
