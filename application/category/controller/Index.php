@@ -206,9 +206,15 @@ class Index extends Base
 
         $info = Db::name('category')->find($cat_id);
         if(!$info) $this->error('参数错误！');
-        $fileUrl = request()->domain() . '/public/uploads/doc/' . $info['url'];
-        header('HTTP/1.1 301 Moved Permanently');
-	    header('Location: https://view.officeapps.live.com/op/view.aspx?src='.$fileUrl);//fileUrl 必须是绝对路径
 
+
+
+        $fileUrl = request()->domain() . '/public/uploads/doc/' . $info['url'];
+        $info['fileUrl'] = 'https://view.officeapps.live.com/op/view.aspx?src='.$fileUrl;
+        // header('HTTP/1.1 301 Moved Permanently');
+	    // header('Location: https://view.officeapps.live.com/op/view.aspx?src='.$fileUrl);//fileUrl 必须是绝对路径
+        return $this->fetch( '',[
+            'info'  =>  $info,
+        ]);
     }
 }
