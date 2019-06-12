@@ -113,7 +113,7 @@ $('.table-sort').dataTable({
     $(row).addClass('text-c');
     $(row).children().first().html('<input type="checkbox" name="cat_id[]" value="'+data.cat_id+'" />');
 
-    var url = "<a title='预览文档' target='_blank' href='{:url(\'document/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'>"+data.cat_name+"</a>";
+    var url = "<a title='预览文档' target='_blank' href='{:url(\'category/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'>"+data.cat_name+"</a>";
    	$(row).children().eq(2).html(url);
 
    	var cat_img = "<img width='50' src='__IMAGES__/";
