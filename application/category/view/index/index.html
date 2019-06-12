@@ -171,7 +171,7 @@ function del(obj,id){
   layer.confirm('{:lang(\'确认要删除吗\')}?',function(index){
     //此处请求后台程序，下方是成功后的前台处理……
     $.post("{:URL('category/index/del')}" ,{'id':id} ,function(data){
-      if( data.status==1 ){
+      if( data.code==1 ){
         $(obj).parents("tr").remove();
         layer.msg('{:lang(\'已删除\')}!',{icon:1,time:1000});
       }else{
