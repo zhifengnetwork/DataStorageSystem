@@ -63,7 +63,7 @@ class Index extends Base
         if( request()->isPost() ){
             $data = input('post.');
             
-            if(!$data['doc_name']) $this->error('类别名称必须填写！');
+            if(!$data['doc_name']) $this->error('文档名称必须填写！');
 
             //文档处理
             if($_FILES['url']['error'] == 0){

@@ -143,13 +143,9 @@ $('.table-sort').dataTable({
 
     {if condition="$Think.session.is_login"}
     html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('Document/index/edit','',false)}/doc_id/"+data.doc_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.doc_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
     {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'Document/index/edit' ) )"}
     html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('Document/index/edit','',false)}/doc_id/"+data.doc_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
-    {/if}{/if}
-
-    {if condition="$Think.session.is_login"}
-    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.doc_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
-    {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'Document/index/del' ) )"}
     html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.doc_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
     {/if}{/if}
 

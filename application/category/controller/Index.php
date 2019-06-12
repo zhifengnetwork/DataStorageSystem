@@ -59,6 +59,13 @@ class Index extends Base
 
             if(!$data['cat_name']) $this->error('类别名称必须填写！');
 
+            //文档处理
+            if($_FILES['url']['error'] == 0){
+                $data['url'] = $this->public_doc('','url');
+            }else{
+                $this->error('请上传文档！');
+            }
+
             if( isset($data['img']) ){
                 
                 $saveName = request()->time().rand(0,99999) . '.png';
@@ -75,7 +82,7 @@ class Index extends Base
 
                 $data['img'] = $name.$saveName;
             }
-            
+
             if ( Db::name('category')->insert($data) ) {
                 layer_close('添加成功');
             }else {
@@ -97,6 +104,12 @@ class Index extends Base
             $data = input('post.');
 
             if(!$data['cat_name']) $this->error('类别名称必须填写！');
+
+            //文档处理
+            if($_FILES['url']['error'] == 0){
+                $data['url'] = $this->public_doc('','url');
+                @unlink( ROOT_PATH . Config('c_pub.img') . $info['url'] );
+            }
 
             if( isset($data['img']) ){
                 
@@ -182,5 +195,20 @@ class Index extends Base
             $res = Db::name('category')->update($data,$data['cat_id']);
             return json($status);;
         }
+    }
+
+    /*
+     * 预览文档
+     */
+    public function preview(){
+        $cat_id = input('cat_id');
+        if(!$cat_id) layer_close('参数错误！');
+
+        $info = Db::name('category')->find($cat_id);
+        if(!$info) $this->error('参数错误！');
+        $fileUrl = request()->domain() . '/public/uploads/doc/' . $info['url'];
+        header('HTTP/1.1 301 Moved Permanently');
+	    header('Location: https://view.officeapps.live.com/op/view.aspx?src='.$fileUrl);//fileUrl 必须是绝对路径
+
     }
 }

@@ -84,7 +84,7 @@
 <body>
 <div class="pd-20">
   <div class="Huiform">
-    <form action="" method="post">
+    <form action="" enctype="multipart/form-data" method="post">
       <table class="table table-bg">
         <tbody>
           <tr>
@@ -94,6 +94,11 @@
           <tr>
             <th class="text-r">简介：</th>
             <td><textarea class="input-text" name="desc" style="height:50px;width:300px;">{$info.desc}</textarea></td>
+          </tr>
+
+          <tr>
+            <th class="text-r">文档(不替换可不传)：</th>
+            <td><input type="file" class="" name="url" multiple></td>
           </tr>
 
           <tr>

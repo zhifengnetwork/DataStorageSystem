@@ -113,6 +113,9 @@ $('.table-sort').dataTable({
     $(row).addClass('text-c');
     $(row).children().first().html('<input type="checkbox" name="cat_id[]" value="'+data.cat_id+'" />');
 
+    var url = "<a title='预览文档' target='_blank' href='{:url(\'document/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'>"+data.cat_name+"</a>";
+   	$(row).children().eq(2).html(url);
+
    	var cat_img = "<img width='50' src='__IMAGES__/";
    		cat_img+=data.img;
    		cat_img+="' />";
@@ -141,22 +144,17 @@ $('.table-sort').dataTable({
     // $(row).children().eq(7).html( time(data.add_time) );
     var html = "";
     {if condition="$Think.session.is_login"}
-    html += "<a title=\"{:lang(\'资料\')}\" href=\"{:url('Document/index/index','',false)}/cat_id/"+data.cat_id+"\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe627;</i></a> ";
+    html = "<a title='预览文档' target='_blank' href='{:url(\'category/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'><i class=\"Hui-iconfont\">&#xe725;</i> </a>";
+    // html += "<a title=\"{:lang(\'资料\')}\" href=\"{:url('Document/index/index','',false)}/cat_id/"+data.cat_id+"\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe627;</i></a> ";
+    html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('category/index/edit','',false)}/cat_id/"+data.cat_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
+    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.cat_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
     {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'Document/index/index' ) )"}
-    html += "<a title=\"{:lang(\'资料\')}\" href=\"{:url('Document/index/index','',false)}/cat_id/"+data.cat_id+"\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe627;</i></a> ";
-    {/if}{/if}
-
-    {if condition="$Think.session.is_login"}
+    html = "<a title='预览文档' target='_blank' href='{:url(\'category/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'><i class=\"Hui-iconfont\">&#xe725;</i> </a>";
+    // html += "<a title=\"{:lang(\'资料\')}\" href=\"{:url('Document/index/index','',false)}/cat_id/"+data.cat_id+"\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe627;</i></a> ";
     html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('category/index/edit','',false)}/cat_id/"+data.cat_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
-    {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'category/index/edit' ) )"}
-    html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('category/index/edit','',false)}/cat_id/"+data.cat_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
-    {/if}{/if}
-
-    {if condition="$Think.session.is_login"}
-    html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.cat_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
-    {else if}{if condition="$Think.session.user_is_login and  strpos( strtolower( $Think.session.user_role_auth.urls ), strtolower( 'Category/index/del' ) )"}
     html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.cat_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
     {/if}{/if}
+
 
     $(row).children().last().html(html);
   }
