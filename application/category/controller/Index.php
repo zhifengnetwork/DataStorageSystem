@@ -62,8 +62,6 @@ class Index extends Base
             //文档处理
             if($_FILES['url']['error'] == 0){
                 $data['url'] = $this->public_doc('','url');
-            }else{
-                $this->error('请上传文档！');
             }
 
             if( isset($data['img']) ){
