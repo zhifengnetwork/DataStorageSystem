@@ -144,7 +144,8 @@ $('.table-sort').dataTable({
     // $(row).children().eq(7).html( time(data.add_time) );
     var html = "";
     {if condition="$Think.session.is_login"}
-    html = "<a title='预览文档' target='_blank' href='{:url(\'category/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'><i class=\"Hui-iconfont\">&#xe725;</i> </a>";
+    // html = "<a title='预览文档' target='_blank' href='{:url(\'category/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'><i class=\"Hui-iconfont\">&#xe725;</i> </a>";
+    html = "<a title='预览文档' href='{:url(\'category/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'><i class=\"Hui-iconfont\">&#xe725;</i> </a>";
     // html += "<a title=\"{:lang(\'资料\')}\" href=\"{:url('Document/index/index','',false)}/cat_id/"+data.cat_id+"\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\">&#xe627;</i></a> ";
     html += "<a title=\"{:lang(\'编辑\')}\" href=\"javascript:;\" onclick=\"edit('{:lang(\'修改信息\')}','{:url('category/index/edit','',false)}/cat_id/"+data.cat_id+"')\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
     html += "<a title=\"{:lang(\'删除\')}\" href=\"javascript:;\" onclick=\"del(this,'"+data.cat_id+"')\" class=\"ml-5\" style=\"text-decoration:none\"><i class=\"Hui-iconfont\"></i></a>";
