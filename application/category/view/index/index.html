@@ -50,9 +50,7 @@
         <th width="25"><input type="checkbox" name="" value=""></th>
         <th width="80">ID</th>
         <th>类别名称</th>
-        <th>类别图片</th>
         <th>是否显示</th>
-        <th>描述</th>
         <th>排序</th>
         <th>操作</th>
       </tr>
@@ -86,7 +84,7 @@ $('.table-sort').dataTable({
 	"StateSave": true,//状态保存
 	
   "columnDefs":[{
-     "targets": [0,2,3,4,5,7],  // 模板栏目列的下标[下标从0开始的,-1表示倒数第一个]
+     "targets": [0,1],  // 模板栏目列的下标[下标从0开始的,-1表示倒数第一个]
      "orderable": false   // 这里固定是false
   }],
   "serverSide": true,
@@ -101,9 +99,7 @@ $('.table-sort').dataTable({
       {'data':'a',"defaultContent":""},
       {'data':'cat_id'},
       {'data':'cat_name'},
-      {'data':'b',"defaultContent":""},
       {'data':'is_show'},
-      {'data':'desc'},
       {'data':'sort'},
       {'data':'c',"defaultContent":""},
 
@@ -116,18 +112,13 @@ $('.table-sort').dataTable({
     var url = "<a title='预览文档' target='_blank' href='{:url(\'category/index/preview\',\'\',false)}/cat_id/"+data.cat_id+"'>"+data.cat_name+"</a>";
    	$(row).children().eq(2).html(url);
 
-   	var cat_img = "<img width='50' src='__IMAGES__/";
-   		cat_img+=data.img;
-   		cat_img+="' />";
-   	$(row).children().eq(3).html(cat_img);
-
     var is_show = '';
     if(data.is_show){
       is_show = '<span onclick="is_show(this,'+data.cat_id+','+data.is_show+')" class="label label-success radius">显示</span>';
     }else{
       is_show = '<span onclick="is_show(this,'+data.cat_id+','+data.is_show+')" class="label label-defaunt radius">不显示</span>';
     }
-    $(row).children().eq(4).html( is_show );
+    $(row).children().eq(3).html( is_show );
 
    	function time(sj)
     {
